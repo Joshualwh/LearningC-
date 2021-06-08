@@ -45,7 +45,7 @@ void Install_Bus_Information()
   for (int seat_number = 1; seat_number < 33; seat_number++)
   {
     seat_number_string = std::to_string(seat_number);
-    bus_seat_information_data.push_back(seat_number_string);
+    bus_seat_information_data.push_back(seat_number_string + ".");
   }
 
   for(std::string bus_seat_information : bus_seat_information_data)
@@ -140,21 +140,60 @@ void Reservation()
 }
 
 void Show_Reservation_Information()
+//show all the information regarding the buses and their respective seats.
+//enlists the no. of empty seats in a bus along with the seat number registered to a particular passenger.
 {
-  std::string bus_number, input, show_reservation_continue;
+  int bus_number_information, bus_number_information_limit;
+  std::string bus_number, show_reservation_continue;
   std::cin.ignore();
+  
+  std::ifstream infile ("bus_information.txt");
+
+  std::vector<std::string> bus_number_data;
+  std::string input;
+  while(infile >> input) //return file
+  {
+    bus_number_data.push_back(input);
+  }
+
   do 
   {
+    bool bus_number_found_status = 0, bus_one_round = 0;
+
     std::cout << "Which bus would you like to see? ";
     std::getline(std::cin, bus_number);
-
-    //std::ifstream file (bus_number + "_seat_information.txt");
-
-    std::ifstream file;
-    file.open(bus_number + "_seat_information.txt");
-    if(file) 
+    
+    do
     {
-      std::cout << "Bus registered and showing!" << std::endl;
+      for (int bus_number_number = 0; bus_number_number < bus_number_data.size(); bus_number_number+=5)
+      {
+        if (bus_number_data[bus_number_number] == bus_number)
+        {
+          std::cout << "Bus registered and showing!" << std::endl;
+          bus_number_information = bus_number_number;
+          bus_number_information_limit = bus_number_number+5;
+          for (int bus_number_information; bus_number_information < bus_number_information_limit; bus_number_information+=1)
+          {
+            std::cout << bus_number_data[bus_number_information] << "\t";
+          }
+          std::cout << std::endl;
+          bus_number_found_status = 1;
+          break;
+        }
+      }
+      bus_one_round = 1;
+    } while (bus_one_round == 0);
+
+    if (bus_number_found_status == 0)
+    {
+      std::cout << "Bus number not found!" << std::endl;
+    }
+
+    if (bus_number_found_status == 1)
+    {
+      std::ifstream file;
+      file.open(bus_number + "_seat_information.txt");
+
       std::vector<std::string> show_reservation_data;
 
       while(file >> input) //return file
@@ -173,13 +212,8 @@ void Show_Reservation_Information()
         std::cout << std::endl;
       }
     } 
-    else 
-    {
-      std::cout << "Bus not found!" << std::endl;
-    }
     std::cout << "Would you like to continue viewing? (Yes/No) ";
     std::getline(std::cin, show_reservation_continue);
-
   } while(show_reservation_continue == "yes" || show_reservation_continue == "Yes");
 }
 
