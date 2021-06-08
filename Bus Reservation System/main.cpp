@@ -130,11 +130,22 @@ void Reservation()
 
       } while (reserve_seat_continue == "yes" || reserve_seat_continue == "Yes" );
 
+      int number_of_seats_taken = 0;
+      for (int number_of_seats_left = 0; number_of_seats_left < bus_seat_reservation_data.size(); number_of_seats_left+=1)
+      {
+        if (bus_seat_reservation_data[number_of_seats_left].size() >= 4)
+        {
+          number_of_seats_taken += 1;
+        }
+      }
+      std::cout << "Number of seats taken: " << number_of_seats_taken << std::endl;
+
       std::ofstream outfile (bus_number_entered + "_seat_information.txt");
       for(std::string bus_seat_reservation : bus_seat_reservation_data)
       {
         outfile << bus_seat_reservation <<std::endl;
       }
+      outfile << number_of_seats_taken << "/32" << std::endl;
     }
   }
 }
@@ -201,12 +212,14 @@ void Show_Reservation_Information()
         show_reservation_data.push_back(input);
       }
 
+      std::cout << "Number of seats taken: " << show_reservation_data[32] << std::endl;;
+
       int seat_number = 0;
       for (int seat_row = 1; seat_row < 9; seat_row++)
       {
         for (int seat_column = 1; seat_column < 5; seat_column++)
         {
-          std::cout << show_reservation_data[seat_number] << "\t";
+          std::cout << show_reservation_data[seat_number] << "\t\t";
           seat_number+=1; 
         }
         std::cout << std::endl;
@@ -218,6 +231,7 @@ void Show_Reservation_Information()
 }
 
 void Buses_Available()
+//buses available for reservation, and the information regarding the bus no. stored under the first feature.
 {
   std::cout << "Availabling!" << std::endl;
 }
